@@ -60,8 +60,8 @@ _start:
 	jz div_zero
 
 	;
-	mov rcx, rax ; знаменатель
-	mov rax, r10 ; числитель
+	mov rcx, rax ; denominator
+	mov rax, r10 ; numerator
 	;
 	cqo
 	idiv rcx
@@ -77,7 +77,7 @@ _start:
 
 	mov r15, rax
 	mov [result], r15
-	;good
+	;good exit
 	mov rax, 60
 	mov rdi, 0
 	syscall
