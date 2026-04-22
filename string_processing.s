@@ -1,4 +1,4 @@
-; maybe it should delete
+
 bits 64
 
 ;reverse symbols in words
@@ -41,6 +41,7 @@ _start:
 	syscall
 
 read_loop:
+	;cin
 	xor rax, rax
 	xor rdi, rdi
 	mov rsi, in_str
@@ -53,7 +54,7 @@ read_loop:
 
 	mov rsi, in_str
 	mov rdi, newin_str
-	xor ecx, ecx
+	xor ecx, ecx ; length word = 0
 
 	mov r10, rax ; all bytes
 	xor r11, r11 ; 0
@@ -70,9 +71,12 @@ parsing_word:    ; parsing
 	je check_word
 	inc ecx ;
 	cmp r11, r10
-	je check_word
-
+	je check_eof
 	jmp parsing_word
+
+check_eof:
+	inc rsi
+	jmp check_word
 check_word:
 	jecxz check_end
 	cmp rdi, newin_str ; if this first word?
@@ -104,19 +108,19 @@ check_end:
 	mov rsi, newin_str
 	syscall
 	jmp read_loop ;new str
-	
+
 good:
 	mov rax, 3	; sys_close
-    	mov rdi, [out_fd]
-    	syscall
-    	xor rdi, rdi   ;0
-    	jmp exit
+	mov rdi, [out_fd]
+	syscall
+	xor rdi, rdi   ;0
+	jmp exit
 error_exit:
 	mov rax, 1
-    mov rdi, 2          ; stderr
-    mov rsi, err_msg
-    mov rdx, err_len
-    syscall
+	mov rdi, 2          ; stderr
+	mov rsi, err_msg
+	mov rdx, err_len
+	syscall
 exit:
 	mov eax, 60
 	syscall
